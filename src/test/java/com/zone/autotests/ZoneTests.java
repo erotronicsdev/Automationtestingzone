@@ -19,7 +19,7 @@ public class ZoneTests {
     private static final String NUMBER = "0123456789";
     private static final String DATA_FOR_RANDOM_STRING = CHAR_LOWER + NUMBER;
     private static SecureRandom random = new SecureRandom();
-    WebDriver driver;
+    private WebDriver driver;
     private String emailToRegister;
 
     @Before
@@ -35,7 +35,10 @@ public class ZoneTests {
         HomePage home = new HomePage(driver);
         home.clickfirstImageInQuickView();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
         ProductPage prodPage = new ProductPage(driver);
+        prodPage.setColorPicker(2);
+        prodPage.setSelectSizeDropDown("2");
         prodPage.clickOnAddToCartButton();
         prodPage.waitOnProceedToCheckoutButton();
         prodPage.clickOnProceedToCheckoutButton();
@@ -73,15 +76,14 @@ public class ZoneTests {
         sumPage.clickOnConfirmOrderButton();
 
         sumPage.clickOnSignOutButton();
-
     }
 
         @After
         public void close(){
-           // driver.close();
+            driver.close();
         }
 
-    public static String generateRandomEmail(int length) {
+    private static String generateRandomEmail(int length) {
         if (length < 1) throw new IllegalArgumentException();
 
         StringBuilder sb = new StringBuilder(length);
@@ -89,8 +91,6 @@ public class ZoneTests {
 
             int rndCharAt = random.nextInt(DATA_FOR_RANDOM_STRING.length());
             char rndChar = DATA_FOR_RANDOM_STRING.charAt(rndCharAt);
-            // debug
-            System.out.format("%d\t:\t%c%n", rndCharAt, rndChar);
             sb.append(rndChar);
         }
         sb.append("@zonetest.com");

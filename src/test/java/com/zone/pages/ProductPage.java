@@ -6,7 +6,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ProductPage {
     private WebDriver driver;
@@ -22,12 +26,6 @@ public class ProductPage {
 
     @FindBy(xpath = "/html/body/div/div[2]/div/div[3]/div/div/div/div[4]/form/div/div[2]/p[1]/a[1]")
     private WebElement quantityMinusButton;
-
-    @FindBy(xpath = "/html/body/div/div[2]/div/div[2]/div/div[1]/ul[1]/li[1]/div/div[1]/div/a[1]/img")
-    private WebElement firstImageInQuickView;
-
-    @FindBy(xpath = "/html/body/div/div[2]/div/div[3]/div/div/div/div[4]/form/div/div[2]/div/fieldset[2]/div/ul/li[1]/a")
-    private WebElement colorOrangeButton;
 
     @FindBy(xpath = "/html/body/div/div[2]/div/div[3]/div/div/div/div[4]/form/div/div[2]/div/fieldset[1]/div/div/select")
     private WebElement selectSizeDropDown;
@@ -52,6 +50,29 @@ public class ProductPage {
     public void waitOnProceedToCheckoutButton() {
         WebDriverWait wait = new WebDriverWait(driver,30);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(PROCCEED_TO_CHECKOUT_BUTTON_XPATH)));
+    }
+
+    public void setSelectSizeDropDown(String sizeOption) {
+        Select sizeSelector = new Select(selectSizeDropDown);
+        sizeSelector.selectByValue(sizeOption);
+    }
+
+    public void setColorPicker(int colorOption) {
+        WebElement colorSelection;
+        String colorOptions;
+        colorOptions = String.valueOf(colorOption);
+        String colorXpath
+                = "/html/body/div/div[2]/div/div[3]/div/div/div/div[4]/form/div/div[2]/div/fieldset[2]/div/ul/li["
+                + colorOptions + "]/a";
+
+        try {
+            colorSelection = driver.findElement(By.xpath(colorXpath));
+            if (colorSelection.isDisplayed()) {
+                colorSelection.click();
+            }
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+        }
     }
 
 }
